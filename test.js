@@ -1,30 +1,30 @@
 'use strict';
 
-var Service = require("./client.js")
+var Service = require("./lib/client.js");
 
 // var q = require('q');
 
 function now() {
-        return new Date().getTime();
+    return new Date().getTime();
 }
 
 var status = {
-        PASSED: 'passed',
-        FAILED: 'failed',
-        SKIPPED: 'skipped'
+    PASSED: 'passed',
+    FAILED: 'failed',
+    SKIPPED: 'skipped'
 };
 
-var rpConfig = {
-    endpoint: "http://ecsc001053dd.epam.com:8080",
-    project: "js-client",
-    token: "91685c75-b6e9-415b-b4d1-ddc29fca35e4"
-}
-
 // var rpConfig = {
-//     endpoint: "https://rp.epam.com",
-//     project: "default_project",
-//     token: "cd00c5d1-f94f-4c4f-bf9d-86f4989f354c"
+//     endpoint: "http://ecsc001053dd.epam.com:8080",
+//     project: "js-client",
+//     token: "91685c75-b6e9-415b-b4d1-ddc29fca35e4"
 // }
+
+var rpConfig = {
+    endpoint: "https://rp.epam.com",
+    project: "default_project",
+    token: "cd00c5d1-f94f-4c4f-bf9d-86f4989f354c"
+};
 
 var rp = new Service(rpConfig);
 
@@ -40,7 +40,7 @@ var startLaunchResponse = rp.startLaunch(startLaunchRQ);
 
 var launchId;
 
-startLaunchResponse.then(function(response){
+startLaunchResponse.then(function (response) {
     var startTestItemRQ = {
         name: "Suite1",
         description: "SuiteDescription",
@@ -50,29 +50,29 @@ startLaunchResponse.then(function(response){
         type: "SUITE"
     };
     var startSuiteResponse = rp.startTestItem(null, startTestItemRQ);
-    startSuiteResponse.then(function(data){
+    startSuiteResponse.then(function (data) {
         var finishTestItemRQ = {
-            end_time : now(),
-            status : status.PASSED
-        }
-        rp.finishTestItem(data.id, finishTestItemRQ).then(function(data){
+            end_time: now(),
+            status: status.PASSED
+        };
+        rp.finishTestItem(data.id, finishTestItemRQ).then(function (data) {
             var finishExecutionRQ = {
-                end_time : now(),
-                status : status.PASSED
+                end_time: now(),
+                status: status.PASSED
             };
 
-            startLaunchResponse.then(function(response){
+            startLaunchResponse.then(function (response) {
                 console.log(response.id);
                 rp.finishLaunch(response.id, finishExecutionRQ)
-                .then(function(data){
-                    console.log(data);
-                })
-            }, function(err){
+                    .then(function (data) {
+                        console.log(data);
+                    })
+            }, function (err) {
                 console.log(err);
             });
         });
     })
-}) 
+});
 
 // console.log(launchId);
 
