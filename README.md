@@ -8,7 +8,7 @@ Library used only for implementors of custom listeners for ReportPortal
 
 ## Installation
 
-The latest stable version is available on npm:
+The latest stable version will be available on npm soon:
 
     npm install reportportal-client
 
