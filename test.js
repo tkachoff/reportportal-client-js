@@ -1,7 +1,7 @@
 'use strict';
 
 var Service = require("./lib/client.js");
-
+var fs = require('fs');
 // var q = require('q');
 
 function now() {
@@ -15,16 +15,10 @@ var status = {
 };
 
 var rpConfig = {
-    endpoint: "http://ecsc001053dd.epam.com:8080",
-    project: "js-client",
-    token: "91685c75-b6e9-415b-b4d1-ddc29fca35e4"
+    endpoint: "https://rp_url",
+    project: "project_name",
+    token: "user_token"
 };
-
-// var rpConfig = {
-//     endpoint: "https://rp.epam.com",
-//     project: "default_project",
-//     token: "cd00c5d1-f94f-4c4f-bf9d-86f4989f354c"
-// };
 
 var rp = new Service(rpConfig);
 
@@ -55,12 +49,13 @@ startLaunchResponse.then(function (response) {
         var saveLogRQ = {
             item_id: testItemId,
             time: now(),
-            message: "logmessage",
-            level: "TRACE"
+            message: "logmessage"
+            // level: "TRACE"
         };
-        var postLogResponse = rp.log(saveLogRQ);
+        var contents = fs.readFileSync("image.jpg", 'base64');
+        var postLogResponse = rp.sendFile(saveLogRQ, "image.jpg", contents, "image/jpg");
         postLogResponse.then(function (data) {
-            console.log(data);
+            // console.log(data);
             var finishTestItemRQ = {
                 end_time: now(),
                 status: status.PASSED
